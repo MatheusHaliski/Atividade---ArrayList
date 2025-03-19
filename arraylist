@@ -1,0 +1,100 @@
+import java.util.Arrays;
+
+public class ArrayList<E> {
+    private Object[] data;
+    private int capacity;
+    private int size;
+
+    public ArrayList() {
+        this.capacity = 10;
+        this.data = new Object[capacity];
+        this.size = 0;
+    }
+
+    public ArrayList(int capacity) {
+        this.capacity = capacity;
+        this.data = new Object[capacity];
+        this.size = 0;
+    }
+
+    public void add(E e) {
+        ensureCapacity();
+        data[size++] = e;
+    }
+
+    public void add(int index, E e) {
+        if (index < 0 || index > size) throw new IndexOutOfBoundsException();
+        ensureCapacity();
+        System.arraycopy(data, index, data, index + 1, size - index);
+        data[index] = e;
+        size++;
+    }
+
+    public E remove(int index) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        E removedElement = (E) data[index];
+        System.arraycopy(data, index + 1, data, index, size - index - 1);
+        data[--size] = null;
+        return removedElement;
+    }
+
+    public boolean remove(Object o) {
+        int index = indexOf(o);
+        if (index == -1) return false;
+        remove(index);
+        return true;
+    }
+
+    public void set(int index, E e) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        data[index] = e;
+    }
+
+    public E get(int index) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        return (E) data[index];
+    }
+
+    public boolean contains(Object o) {
+        return indexOf(o) != -1;
+    }
+
+    public int indexOf(Object o) {
+        for (int i = 0; i < size; i++) {
+            if (data[i].equals(o)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public Object[] toArray() {
+        return Arrays.copyOf(data, size);
+    }
+
+    private void ensureCapacity() {
+        if (size == capacity) {
+            capacity *= 2;
+            data = Arrays.copyOf(data, capacity);
+        }
+    }
+
+    public static void main(String[] args) {
+        ArrayList<String> list = new ArrayList<>();
+        list.add(1,"MAÇA");
+        list.add(2,"BANANA");
+        list.add(3,"MORANGO");
+        list.add(4, "PERA");
+        
+        System.out.println(Arrays.toString(list.toArray()));
+        list.remove("BANANA");
+        System.out.println(Arrays.toString(list.toArray()));
+        
+        list.set(3,"LARANJA");
+        list.set(4,"MAMÃO");
+        System.out.println(list.get(1));
+        
+        System.out.println("Contêm Maça? " + list.contains("MAÇA"));
+        System.out.println("Índice do Morango:" + list.indexOf("MORANGO"));
+    }
+}
